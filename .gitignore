@@ -4,7 +4,7 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**
 !**/src/test/**
-**/resources/key.json
+**/resources/TTS/**
 
 ### STS ###
 .apt_generated
