@@ -60,7 +60,7 @@ public class TTSService {
                 byte[] bytes = new byte[1024];
                 // 랜덤한 이름으로 mp3 파일 생성
                 voice_file_name = Long.valueOf(new Date().getTime()).toString();
-                File f = new File(voice_file_name + ".mp3");
+                File f = new File("src/main/resources/TTS/" + voice_file_name + ".mp3");
                 f.createNewFile();
                 OutputStream outputStream = new FileOutputStream(f);
                 while ((read =is.read(bytes)) != -1) {
