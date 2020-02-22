@@ -1,11 +1,12 @@
 package io.socc.asurada.voice.controller;
 
 import io.socc.asurada.voice.service.TTSService;
-import io.socc.asurada.voice.vo.TTSResponseVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 
 @RestController
 @RequestMapping("/api")
@@ -14,11 +15,36 @@ public class TTSController {
     @Autowired
     TTSService ttsService;
 
+    @Autowired
+    ServletContext servletContext;
+
     // Response for GET /api/address
     @RequestMapping(value = "/tts", method = {RequestMethod.GET})
-    public TTSResponseVO tts_response(@RequestParam(required = true)String text){
-        TTSResponseVO responseVO = new TTSResponseVO();
-        responseVO.setMessage(ttsService.tts_request(text));
-        return responseVO;
+    public String tts_response(@RequestParam(required = true)String text, HttpServletResponse response){
+        // System.out.println("--playFile");
+        File file = new File("src/main/resources/TTS/" + ttsService.tts_request(text) + ".mp3");
+        FileInputStream fis;
+        byte[] buffer=null;
+        try {
+            fis = new FileInputStream(file);
+            buffer= new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+        } catch (FileNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        response.setContentType("audio/mpeg");
+        try{
+            response.getOutputStream().write(buffer);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return "TTS";
     }
 }
